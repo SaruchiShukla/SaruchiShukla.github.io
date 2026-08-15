@@ -1,0 +1,5 @@
+# Cloudflare Pages / Netlify-style SPA fallback (also used by some hosts)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
