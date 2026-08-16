@@ -62,8 +62,7 @@ export default function App() {
     })
   }, [])
 
-  return (
-    const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
+  const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
 
   return (
     <BrowserRouter basename={routerBasename}>
