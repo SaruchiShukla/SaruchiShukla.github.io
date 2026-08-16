@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { starsFromPct } from '../hooks/useProgress'
+import AiExplainPanel from './AiExplainPanel'
 
 const LEVEL_LABEL = {
   logical: 'Warm-up',
@@ -214,6 +215,14 @@ export default function Quiz({ questions, subject, prior, onSubmit, nextLabel, o
                         <strong>Why:</strong> {q.explain}
                       </p>
                     ) : null}
+                    <AiExplainPanel
+                      subject={subject}
+                      question={q.q}
+                      options={q.options}
+                      correctIndex={q.answer}
+                      chosenIndex={picked}
+                      shortExplain={q.explain}
+                    />
                   </li>
                 )
               })}

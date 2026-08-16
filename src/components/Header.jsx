@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { APP, LEARNER } from '../data/curriculum'
+import AiSettings from './AiSettings'
 
 export default function Header({ progress, onName }) {
   const name = progress.learnerName || LEARNER.name
@@ -18,6 +19,7 @@ export default function Header({ progress, onName }) {
           <Link to="/">Home</Link>
           <Link to="/reports">Report</Link>
         </nav>
+        <AiSettings />
         <div className="learner-chip" title={`${LEARNER.school} · ${LEARNER.board} ${LEARNER.grade}`}>
           <span className="learner-chip__label">For</span>
           <strong>{name}</strong>

@@ -946,6 +946,106 @@ h3,
   font-weight: 650;
 }
 
+.btn--ai {
+  background: linear-gradient(120deg, #e8488a, #f080b0);
+  color: #fff;
+  border-color: transparent;
+  margin-top: 0.65rem;
+}
+
+.btn--ai:hover {
+  filter: brightness(1.05);
+}
+
+.ai-explain {
+  margin-top: 0.55rem;
+}
+
+.ai-explain__hint {
+  margin: 0.35rem 0 0;
+}
+
+.ai-explain__error {
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.ai-explain__box {
+  margin-top: 0.7rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #fff, var(--maths-soft));
+  border: 1px solid rgba(232, 72, 138, 0.2);
+}
+
+.ai-explain__label {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--maths);
+}
+
+.ai-explain__box p {
+  margin: 0.35rem 0;
+  white-space: pre-wrap;
+}
+
+.ai-settings {
+  position: relative;
+}
+
+.ai-settings__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.45rem);
+  width: min(320px, 86vw);
+  z-index: 30;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.ai-settings__panel h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.ai-settings__field {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.ai-settings__field input {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+}
+
+.ai-settings__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+}
+
+@media (max-width: 720px) {
+  .ai-settings__panel {
+    right: auto;
+    left: 0;
+  }
+}
+
 .try-card {
   border: 1px solid var(--line);
   border-radius: 14px;
