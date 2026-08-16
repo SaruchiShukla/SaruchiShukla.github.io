@@ -5,6 +5,7 @@ import Home from './components/Home'
 import DaySchedule from './components/DaySchedule'
 import Session from './components/Session'
 import Subjects from './components/Subjects'
+import Topics from './components/Topics'
 import Reports from './components/Reports'
 import { loadProgress, saveProgress, sessionKey } from './hooks/useProgress'
 import { LEARNER } from './data/learner'
@@ -74,6 +75,9 @@ export default function App() {
             <Route path="/reports" element={<Reports progress={progress} />} />
             <Route path="/subjects" element={<Subjects />} />
             <Route path="/subjects/:subjectId" element={<Subjects />} />
+            <Route path="/topics" element={<Topics progress={progress} />} />
+            <Route path="/topics/:subjectId" element={<Topics progress={progress} />} />
+            <Route path="/topics/:subjectId/:chapterId" element={<Topics progress={progress} />} />
             <Route path="/day/:dayNum" element={<DaySchedule progress={progress} />} />
             <Route
               path="/day/:dayNum/:sessionId"

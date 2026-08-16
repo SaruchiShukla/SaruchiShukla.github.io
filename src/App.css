@@ -240,6 +240,152 @@ h3,
   font-weight: 750;
 }
 
+.school-map__jump {
+  margin: 0.65rem 0 0;
+}
+
+.school-map h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.school-map h3 a:hover {
+  text-decoration: underline;
+}
+
+.chapter-link-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.chapter-link-list a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 750;
+}
+
+.chapter-link-list a:hover {
+  color: var(--maths);
+  text-decoration: underline;
+}
+
+.school-map__cols .chapter-link-list:last-child a:hover,
+.topics-overview__col--science .chapter-link-list a:hover {
+  color: var(--science);
+}
+
+.topics-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.topics-overview__col {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+  box-shadow: var(--shadow);
+}
+
+.topics-overview__col h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+}
+
+.topics-overview__col h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.topics-overview__col--maths h2 {
+  color: var(--maths);
+}
+
+.topics-overview__col--science h2 {
+  color: var(--science);
+}
+
+.topics-overview .chapter-link-list {
+  list-style: none;
+  padding: 0;
+}
+
+.topics-overview .chapter-link-list li {
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.topics-overview .chapter-link-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.15rem;
+  align-items: baseline;
+}
+
+.chapter-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.chapter-card {
+  display: block;
+  padding: 1rem 1.05rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+}
+
+.chapter-card:hover {
+  transform: translateY(-2px);
+}
+
+.chapter-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.chapter-card p {
+  margin: 0 0 0.7rem;
+}
+
+.chapter-card span {
+  font-weight: 800;
+  color: var(--maths);
+}
+
+.chapter-card--science span {
+  color: var(--science);
+}
+
+.topic-group {
+  margin: 1.35rem 0 1.75rem;
+}
+
+.topic-group h2 {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 720px) {
+  .topics-overview {
+    grid-template-columns: 1fr;
+  }
+}
+
 .icse-tags {
   display: flex;
   flex-wrap: wrap;

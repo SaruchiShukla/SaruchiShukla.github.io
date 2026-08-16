@@ -59,14 +59,27 @@ export default function Home({ progress }) {
             ))}
           </p>
         ) : null}
+        <p className="school-map__jump">
+          <Link className="btn btn--small" to="/topics">
+            Browse all topics →
+          </Link>
+        </p>
         <div className="school-map__cols">
           <div>
-            <h3>Maths chapters (ICSE)</h3>
-            <ul>
+            <h3>
+              <Link to="/topics/maths">Maths chapters (ICSE)</Link>
+            </h3>
+            <ul className="chapter-link-list">
               {(SCHOOL_MAP.mathsChapters || SCHOOL_MAP.mathsUnits.map((name) => ({ name }))).map(
                 (u) => (
                   <li key={u.id || u.name}>
-                    <strong>{u.name}</strong>
+                    {u.id ? (
+                      <Link to={`/topics/maths/${u.id}`}>
+                        <strong>{u.name}</strong>
+                      </Link>
+                    ) : (
+                      <strong>{u.name}</strong>
+                    )}
                     {u.details?.length ? (
                       <span className="muted small"> — {u.details.slice(0, 3).join(', ')}…</span>
                     ) : null}
@@ -76,12 +89,20 @@ export default function Home({ progress }) {
             </ul>
           </div>
           <div>
-            <h3>Science chapters (ICSE)</h3>
-            <ul>
+            <h3>
+              <Link to="/topics/science">Science chapters (ICSE)</Link>
+            </h3>
+            <ul className="chapter-link-list">
               {(SCHOOL_MAP.scienceChapters || SCHOOL_MAP.scienceUnits.map((name) => ({ name }))).map(
                 (u) => (
                   <li key={u.id || u.name}>
-                    <strong>{u.name}</strong>
+                    {u.id ? (
+                      <Link to={`/topics/science/${u.id}`}>
+                        <strong>{u.name}</strong>
+                      </Link>
+                    ) : (
+                      <strong>{u.name}</strong>
+                    )}
                     {u.details?.length ? (
                       <span className="muted small"> — {u.details.slice(0, 3).join(', ')}…</span>
                     ) : null}
@@ -136,13 +157,18 @@ export default function Home({ progress }) {
       </section>
 
       <section className="subject-links">
-        <h2>Subjects</h2>
+        <h2>Browse by topic or schedule</h2>
         <div className="subject-grid">
+          <Link to="/topics" className="subject-tile subject-tile--maths">
+            <h3>Topic map</h3>
+            <p>ICSE chapters with direct Course 30m and Exam 15Q links.</p>
+            <span>Open topics →</span>
+          </Link>
           {Object.values(SUBJECTS).map((sub) => (
             <Link key={sub.id} to={`/subjects/${sub.id}`} className={`subject-tile subject-tile--${sub.id}`}>
-              <h3>{sub.name}</h3>
+              <h3>{sub.name} by day</h3>
               <p>{sub.blurb}</p>
-              <span>View all days →</span>
+              <span>View day list →</span>
             </Link>
           ))}
         </div>

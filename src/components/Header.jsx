@@ -17,6 +17,7 @@ export default function Header({ progress, onName }) {
       <div className="header-right">
         <nav className="header-nav">
           <Link to="/">Home</Link>
+          <Link to="/topics">Topics</Link>
           <Link to="/reports">Report</Link>
         </nav>
         <AiSettings />
