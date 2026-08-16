@@ -27,9 +27,8 @@ export default function Home({ progress }) {
         <h1 className="hero__brand hero__learner">{name}</h1>
         <p className="hero__subbrand">{APP.name}</p>
         <p className="hero__lead">
-          Hi {first}! Every school day: <strong>30-min Maths</strong> + <strong>30-min Science</strong>{' '}
-          topic videos mapped to Vidyashilp’s ICSE Class 3 units, then a{' '}
-          <strong>15-question exam</strong> on the same topics — no timers.
+          Hi {first}! Soft pink BloomDay just for you — watch Maths & Science videos, then take a
+          gentle 15-question exam (one question at a time, with stars at the end).
         </p>
         <div className="hero__cta">
           <Link className="btn btn--primary btn--lg" to={`/day/${today.day}`}>

@@ -33,6 +33,9 @@ export default function Session({ progress, markComplete }) {
 
   const finishQuiz = (result) => {
     markComplete(day.day, plan.id, result)
+  }
+
+  const continueAfterQuiz = () => {
     if (nextId) navigate(`/day/${day.day}/${nextId}`)
     else navigate(`/day/${day.day}`)
   }
@@ -110,10 +113,10 @@ export default function Session({ progress, markComplete }) {
       ) : (
         <>
           <section className="olympiad-note">
-            <h2>Topic exam — 15 questions</h2>
+            <h2>Saruchi’s topic exam</h2>
             <p>
-              Same topic as today’s course. No timer — take your time. Tap one answer for each
-              question; your score is saved in the report.
+              Same topic as the course. One question at a time — no timer. When you finish, you’ll see
+              your stars before moving on.
             </p>
           </section>
           <Quiz
@@ -121,12 +124,9 @@ export default function Session({ progress, markComplete }) {
             subject={plan.subject}
             prior={progress.completed[sessionKey(day.day, plan.id)]}
             onSubmit={finishQuiz}
+            nextLabel={nextId ? 'Next activity →' : 'Back to today’s schedule'}
+            onContinue={continueAfterQuiz}
           />
-          <div className="session-footer">
-            <Link className="btn btn--ghost" to="/reports">
-              See my report
-            </Link>
-          </div>
         </>
       )}
     </div>
