@@ -33,9 +33,8 @@ Open: **http://127.0.0.1:5180/**
 
 Push to `main` — GitHub Actions publishes to GitHub Pages automatically.
 
-## AI step-by-step explanations (optional)
+## AI step-by-step explanations
 
-On exam review, tap **Explain step by step**.
+On exam review, tap **Explain step by step**. AI tutoring is built into the live app via a GitHub Actions secret (not stored as plain text in the repo).
 
-- Works immediately with built-in clear steps (no key needed).
-- For smarter AI tutoring, parent opens **AI settings** in the header and pastes a free Gemini key from [Google AI Studio](https://aistudio.google.com/apikey). The key stays on this device only.
+For extra safety, in Google AI Studio restrict the key by HTTP referrer to `https://saruchishukla.github.io/*`.

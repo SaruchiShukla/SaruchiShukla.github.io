@@ -41,10 +41,9 @@ export default function AiExplainPanel({ subject, question, options, correctInde
       <button type="button" className="btn btn--small btn--ai" onClick={run} disabled={loading}>
         {loading ? 'Thinking…' : 'Explain step by step'}
       </button>
-      {!ready ? (
+      {!text && !loading ? (
         <p className="muted small ai-explain__hint">
-          Works without a key (simple steps). For smarter AI, parent can add a free Gemini key in
-          Settings.
+          AI tutor is built into BloomDay — tap for clear right/wrong steps.
         </p>
       ) : null}
       {error ? <p className="ai-explain__error">{error}</p> : null}

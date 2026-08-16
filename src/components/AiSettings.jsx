@@ -21,11 +21,9 @@ export default function AiSettings() {
         <div className="ai-settings__panel">
           <h3>Parent · AI tutor key</h3>
           <p className="muted small">
-            Free Google Gemini key (optional). Get one at{' '}
-            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">
-              aistudio.google.com/apikey
-            </a>
-            . Stored only on this device.
+            AI is already built into the live app. Only use this if you want to replace the key on
+            this device. Restrict keys to{' '}
+            <code>https://saruchishukla.github.io/*</code> in Google AI Studio.
           </p>
           <label className="ai-settings__field">
             <span>Gemini API key</span>
