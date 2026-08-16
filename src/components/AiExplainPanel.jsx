@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { explainAnswer, hasAiApiKey } from '../services/aiExplain'
+import { explainAnswer } from '../services/aiExplain'
 
 export default function AiExplainPanel({ subject, question, options, correctIndex, chosenIndex, shortExplain }) {
   const [loading, setLoading] = useState(false)
   const [text, setText] = useState('')
   const [source, setSource] = useState('')
   const [error, setError] = useState('')
-
-  const ready = hasAiApiKey()
 
   useEffect(() => {
     setText('')
