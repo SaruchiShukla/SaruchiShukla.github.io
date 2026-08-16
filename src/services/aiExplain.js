@@ -1,5 +1,5 @@
 const AI_KEY_STORAGE = 'bloomday-gemini-api-key'
-const MODEL = 'gemini-2.0-flash'
+const MODEL = 'gemini-flash-latest'
 
 export function loadAiApiKey() {
   try {
