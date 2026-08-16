@@ -829,10 +829,121 @@ h3,
   border: 1px solid var(--line);
 }
 
-.quiz__review summary {
-  cursor: pointer;
+.quiz__wrong-summary {
+  margin: 0.75rem 0 0;
+  font-weight: 700;
+  color: var(--science);
+}
+
+.quiz__wrong-summary--ok {
+  color: var(--ok);
+}
+
+.quiz__review--open {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.quiz__review-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.quiz__review-head h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.quiz__wrong-jumps {
+  margin-bottom: 1rem;
+}
+
+.quiz__wrong-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.quiz__wrong-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: var(--science-soft);
+  color: var(--science);
   font-weight: 800;
-  color: var(--maths);
+  font-size: 0.85rem;
+}
+
+.quiz__item--review {
+  scroll-margin-top: 1rem;
+}
+
+.quiz__item--bad {
+  border: 1px solid rgba(212, 90, 106, 0.35);
+  background: #fff5f7;
+  border-radius: 16px;
+  padding: 0.9rem;
+}
+
+.quiz__item--ok {
+  border: 1px solid rgba(61, 155, 110, 0.25);
+  background: #f4fff8;
+  border-radius: 16px;
+  padding: 0.9rem;
+}
+
+.quiz__review-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.35rem;
+}
+
+.quiz__badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.quiz__badge--ok {
+  background: rgba(61, 155, 110, 0.15);
+  color: var(--ok);
+}
+
+.quiz__badge--bad {
+  background: rgba(212, 90, 106, 0.15);
+  color: var(--danger);
+}
+
+.quiz__answer-lines {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.45rem 0 0.7rem;
+}
+
+.quiz__yours {
+  margin: 0;
+  color: var(--danger);
+  font-weight: 650;
+}
+
+.quiz__right {
+  margin: 0.35rem 0 0.7rem;
+  color: var(--ok);
+  font-weight: 650;
 }
 
 .try-card {

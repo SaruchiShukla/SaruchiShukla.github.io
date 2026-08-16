@@ -8,18 +8,38 @@ const LEVEL_LABEL = {
   achievers: 'Challenge',
 }
 
+function emptyAnswers(n) {
+  return Array.from({ length: n }, () => null)
+}
+
 export default function Quiz({ questions, subject, prior, onSubmit, nextLabel, onContinue }) {
-  const [answers, setAnswers] = useState(() => questions.map(() => null))
+  const savedAnswers = Array.isArray(prior?.answers) ? prior.answers : null
+  const [answers, setAnswers] = useState(() =>
+    savedAnswers?.length === questions.length ? savedAnswers : emptyAnswers(questions.length),
+  )
   const [step, setStep] = useState(0)
   const [submitted, setSubmitted] = useState(Boolean(prior?.score != null))
   const [score, setScore] = useState(prior?.score ?? null)
+  const [showReview, setShowReview] = useState(Boolean(prior?.score != null && prior?.score < prior?.total))
 
   const answeredCount = useMemo(() => answers.filter((a) => a !== null).length, [answers])
+  const wrongItems = useMemo(() => {
+    if (!submitted) return []
+    return questions
+      .map((q, qi) => ({
+        qi,
+        q,
+        picked: answers[qi],
+      }))
+      .filter((row) => row.picked !== row.q.answer)
+  }, [submitted, questions, answers])
+
   const current = questions[step]
   const chosen = answers[step]
   const pct = score != null ? Math.round((score / questions.length) * 100) : null
   const stars = starsFromPct(pct)
   const isLast = step >= questions.length - 1
+  const wrongCount = wrongItems.length
 
   const choose = (oi) => {
     if (submitted) return
@@ -45,21 +65,25 @@ export default function Quiz({ questions, subject, prior, onSubmit, nextLabel, o
     questions.forEach((q, i) => {
       if (answers[i] === q.answer) s += 1
     })
+    const wrong = questions.length - s
     setScore(s)
     setSubmitted(true)
+    setShowReview(wrong > 0)
     onSubmit({
       score: s,
       total: questions.length,
       pct: Math.round((s / questions.length) * 100),
+      answers: [...answers],
       at: Date.now(),
     })
   }
 
   const retry = () => {
-    setAnswers(questions.map(() => null))
+    setAnswers(emptyAnswers(questions.length))
     setStep(0)
     setSubmitted(false)
     setScore(null)
+    setShowReview(false)
   }
 
   if (submitted && score != null) {
@@ -67,22 +91,41 @@ export default function Quiz({ questions, subject, prior, onSubmit, nextLabel, o
       pct === 100
         ? 'Perfect, Saruchi! All stars for you!'
         : pct >= 75
-          ? 'Wonderful! You did so well!'
+          ? 'Wonderful! Review any pink “Wrong” ones below.'
           : pct >= 50
-            ? 'Good try! Look at the green answers, then try again.'
-            : 'It’s okay — learning takes practice. Try once more!'
+            ? 'Good try! Open Review to see which ones were wrong.'
+            : 'It’s okay — open Review, learn the green answers, then try again.'
 
     return (
       <div className={`quiz quiz--${subject} quiz--done`}>
         <div className="quiz__celebrate">
           <p className="quiz__celebrate-eyebrow">Exam finished</p>
-          <h2>You got {score} out of {questions.length}</h2>
+          <h2>
+            You got {score} out of {questions.length}
+          </h2>
           <p className="quiz__stars" aria-label={`${stars} stars`}>
             {'★'.repeat(stars)}
             <span className="stars__empty">{'★'.repeat(5 - stars)}</span>
           </p>
           <p className="quiz__cheer">{cheer}</p>
+          {wrongCount > 0 ? (
+            <p className="quiz__wrong-summary">
+              <strong>{wrongCount}</strong> question{wrongCount === 1 ? '' : 's'} wrong — tap Review
+              to see them.
+            </p>
+          ) : (
+            <p className="quiz__wrong-summary quiz__wrong-summary--ok">Every answer was correct!</p>
+          )}
           <div className="quiz__done-actions">
+            {wrongCount > 0 ? (
+              <button
+                type="button"
+                className="btn btn--primary btn--lg"
+                onClick={() => setShowReview(true)}
+              >
+                Review wrong answers
+              </button>
+            ) : null}
             {onContinue ? (
               <button type="button" className="btn btn--primary btn--lg" onClick={onContinue}>
                 {nextLabel || 'Continue'}
@@ -97,38 +140,90 @@ export default function Quiz({ questions, subject, prior, onSubmit, nextLabel, o
           </div>
         </div>
 
-        <details className="quiz__review">
-          <summary>See answers ({questions.length} questions)</summary>
-          <ol className="quiz__list">
-            {questions.map((q, qi) => {
-              const picked = answers[qi]
-              return (
-                <li key={`${qi}-${q.q}`} className="quiz__item">
-                  <p className="quiz__q">
-                    <span>{qi + 1}.</span> {q.q}
-                  </p>
-                  <div className="quiz__options">
-                    {q.options.map((opt, oi) => {
-                      let cls = 'opt'
-                      if (oi === q.answer) cls += ' opt--correct'
-                      else if (picked === oi) cls += ' opt--wrong'
-                      return (
-                        <button key={`${opt}-${oi}`} type="button" className={cls} disabled>
-                          {opt}
-                        </button>
-                      )
-                    })}
-                  </div>
-                  {q.explain ? (
-                    <p className="quiz__explain">
-                      <strong>Why:</strong> {q.explain}
+        {showReview ? (
+          <section className="quiz__review quiz__review--open" id="exam-review">
+            <div className="quiz__review-head">
+              <h3>Review — wrong answers</h3>
+              <button type="button" className="btn btn--ghost btn--small" onClick={() => setShowReview(false)}>
+                Hide
+              </button>
+            </div>
+
+            {wrongCount > 0 ? (
+              <div className="quiz__wrong-jumps">
+                <p className="muted small">Jump to a wrong question:</p>
+                <div className="quiz__wrong-chips">
+                  {wrongItems.map(({ qi }) => (
+                    <a key={qi} className="quiz__wrong-chip" href={`#review-q-${qi + 1}`}>
+                      Q{qi + 1}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <ol className="quiz__list">
+              {questions.map((q, qi) => {
+                const picked = answers[qi]
+                const isCorrect = picked === q.answer
+                const yourText = picked != null ? q.options[picked] : 'No answer'
+                const rightText = q.options[q.answer]
+                return (
+                  <li
+                    key={`${qi}-${q.q}`}
+                    id={`review-q-${qi + 1}`}
+                    className={`quiz__item quiz__item--review ${isCorrect ? 'quiz__item--ok' : 'quiz__item--bad'}`}
+                  >
+                    <div className="quiz__review-badge-row">
+                      <span className={`quiz__badge ${isCorrect ? 'quiz__badge--ok' : 'quiz__badge--bad'}`}>
+                        {isCorrect ? 'Correct' : 'Wrong'}
+                      </span>
+                      <span className="muted small">Question {qi + 1}</span>
+                    </div>
+                    <p className="quiz__q">
+                      <span>{qi + 1}.</span> {q.q}
                     </p>
-                  ) : null}
-                </li>
-              )
-            })}
-          </ol>
-        </details>
+                    {!isCorrect ? (
+                      <div className="quiz__answer-lines">
+                        <p className="quiz__yours">
+                          <strong>Your answer:</strong> {yourText}
+                        </p>
+                        <p className="quiz__right">
+                          <strong>Right answer:</strong> {rightText}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="quiz__right">
+                        <strong>Right answer:</strong> {rightText}
+                      </p>
+                    )}
+                    <div className="quiz__options">
+                      {q.options.map((opt, oi) => {
+                        let cls = 'opt'
+                        if (oi === q.answer) cls += ' opt--correct'
+                        else if (picked === oi) cls += ' opt--wrong'
+                        return (
+                          <button key={`${opt}-${oi}`} type="button" className={cls} disabled>
+                            {opt}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    {q.explain ? (
+                      <p className="quiz__explain">
+                        <strong>Why:</strong> {q.explain}
+                      </p>
+                    ) : null}
+                  </li>
+                )
+              })}
+            </ol>
+          </section>
+        ) : wrongCount > 0 ? (
+          <p className="muted small quiz__hint">
+            Tip: tap <strong>Review wrong answers</strong> to see what to fix.
+          </p>
+        ) : null}
       </div>
     )
   }
@@ -137,9 +232,7 @@ export default function Quiz({ questions, subject, prior, onSubmit, nextLabel, o
     <div className={`quiz quiz--${subject}`}>
       <div className="quiz__intro">
         <h2>Let’s do the exam!</h2>
-        <p>
-          One question at a time · tap your answer · no hurry
-        </p>
+        <p>One question at a time · tap your answer · no hurry</p>
         <div className="quiz__progress" aria-label={`Question ${step + 1} of ${questions.length}`}>
           <div className="quiz__progress-bar">
             <span style={{ width: `${((step + 1) / questions.length) * 100}%` }} />
