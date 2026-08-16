@@ -220,10 +220,82 @@ h3,
   margin-top: 1rem;
 }
 
+.heading-link {
+  color: var(--maths);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 2px;
+}
+
+.heading-link:hover {
+  color: var(--ink);
+}
+
+.heading-link--science {
+  color: var(--science);
+}
+
+.heading-link--science:hover {
+  color: var(--ink);
+}
+
+.chapter-heading {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.icse-nav-link {
+  color: var(--maths);
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.icse-nav-link:hover {
+  color: var(--ink);
+}
+
+.session-list__item--science .icse-nav-link,
+.schedule-step--science .icse-nav-link,
+.topic-row--science .icse-nav-link {
+  color: var(--science);
+}
+
+.session-topic-link {
+  display: block;
+  margin-top: 0.15rem;
+  font-weight: 650;
+}
+
+.icse-line--link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+a.icse-tags__link,
+.icse-tags .icse-nav-link {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--science);
+  background: var(--science-soft);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.icse-tags .icse-nav-link:first-child {
+  color: var(--maths);
+  background: var(--maths-soft);
+}
+
 .school-map h3 {
   margin: 0 0 0.4rem;
   font-size: 1rem;
-  color: var(--maths);
 }
 
 .school-map__sources {

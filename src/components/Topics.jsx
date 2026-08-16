@@ -4,6 +4,7 @@ import {
   getChapter,
   getChapters,
   getDetailLink,
+  pathForIcseTag,
   TOPIC_INDEX,
 } from '../data/topicIndex'
 import { dayCompletion, isSessionDone } from '../hooks/useProgress'
@@ -25,7 +26,11 @@ function LessonRows({ subjectId, lessons, progress }) {
                 {c.done === c.total ? ' · done' : ''}
               </span>
               <strong>{lesson.topic}</strong>
-              {lesson.icse ? <span className="icse-line">{lesson.icse}</span> : null}
+              {lesson.icse ? (
+                <Link to={pathForIcseTag(subjectId, lesson.icse)} className="icse-line icse-line--link">
+                  {lesson.icse}
+                </Link>
+              ) : null}
             </div>
             <div className="topic-actions">
               <Link className="btn btn--small" to={lesson.lessonPath}>
@@ -89,15 +94,21 @@ export default function Topics({ progress }) {
             return (
               <section key={sid} className={`topics-overview__col topics-overview__col--${sid}`}>
                 <h2>
-                  <Link to={`/topics/${sid}`}>{sub.name}</Link>
+                  <Link to={`/topics/${sid}`} className={`heading-link heading-link--${sid}`}>
+                    {sub.name} →
+                  </Link>
                 </h2>
                 <ul className="chapter-link-list chapter-link-list--rich">
                   {chapters.map((ch) => (
                     <li key={ch.id}>
-                      <Link to={`/topics/${sid}/${ch.id}`} className="chapter-link-list__title">
-                        <strong>{ch.name}</strong>
-                        <span className="muted small">{ch.lessonCount} lessons</span>
-                      </Link>
+                      <h4 className="chapter-heading">
+                        <Link
+                          to={`/topics/${sid}/${ch.id}`}
+                          className={`heading-link heading-link--${sid}`}
+                        >
+                          {ch.name} →
+                        </Link>
+                      </h4>
                       <DetailChips chapter={ch} />
                     </li>
                   ))}
@@ -140,8 +151,8 @@ export default function Topics({ progress }) {
             <li key={ch.id}>
               <div className={`chapter-card chapter-card--${subjectId}`}>
                 <Link to={`/topics/${subjectId}/${ch.id}`} className="chapter-card__main">
-                  <h3>{ch.name}</h3>
-                  <span>{ch.lessonCount} lessons →</span>
+                  <h3 className={`heading-link heading-link--${subjectId}`}>{ch.name} →</h3>
+                  <span>{ch.lessonCount} lessons</span>
                 </Link>
                 <DetailChips chapter={ch} />
               </div>
@@ -184,7 +195,18 @@ export default function Topics({ progress }) {
       </nav>
       <header className="page-head">
         <p className="eyebrow">ICSE Class 3 · {sub.name}</p>
-        <h1>{showFocused ? focused.label : chapter.name}</h1>
+        <h1>
+          <Link
+            to={
+              showFocused
+                ? `/topics/${subjectId}/${chapterId}`
+                : `/topics/${subjectId}/${chapterId}`
+            }
+            className={`heading-link heading-link--${subjectId}`}
+          >
+            {showFocused ? focused.label : chapter.name}
+          </Link>
+        </h1>
         <p className="muted">
           {showFocused
             ? `Part of ${chapter.name} · ${focused.lessonCount || chapter.lessonCount} linked lessons`
@@ -208,7 +230,14 @@ export default function Topics({ progress }) {
       ) : (
         chapter.subtopics.map((group) => (
           <section key={group.label} className="topic-group">
-            <h2>{group.label}</h2>
+            <h2>
+              <Link
+                to={pathForIcseTag(subjectId, group.label)}
+                className={`heading-link heading-link--${subjectId}`}
+              >
+                {group.label} →
+              </Link>
+            </h2>
             <LessonRows subjectId={subjectId} lessons={group.lessons} progress={progress} />
           </section>
         ))

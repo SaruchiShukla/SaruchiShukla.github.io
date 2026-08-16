@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { APP, LEARNER, getDay } from '../data/curriculum'
 import { dayCompletion, isSessionDone } from '../hooks/useProgress'
+import { IcseLink } from './IcseLink'
 
 export default function DaySchedule({ progress }) {
   const { dayNum } = useParams()
@@ -27,8 +28,12 @@ export default function DaySchedule({ progress }) {
           Maths 30-min video course → Science 30-min video course → Maths 15Q exam → Science 15Q exam
         </p>
         <p className="icse-tags">
-          <span>Maths ICSE: {day.mathsUnit}</span>
-          <span>Science ICSE: {day.scienceUnit}</span>
+          <IcseLink subject="maths" unit={day.mathsUnit} className="icse-tags__link">
+            Maths ICSE: {day.mathsUnit}
+          </IcseLink>
+          <IcseLink subject="science" unit={day.scienceUnit} className="icse-tags__link">
+            Science ICSE: {day.scienceUnit}
+          </IcseLink>
         </p>
         <div className="progress-bar">
           <span style={{ width: `${completion.pct}%` }} />
@@ -51,9 +56,17 @@ export default function DaySchedule({ progress }) {
               <span className="schedule-step__index">{i + 1}</span>
               <div className="schedule-step__body">
                 <h2>{s.label}</h2>
-                <p>{block.topic}</p>
+                <p>
+                  <IcseLink subject={s.subject} icse={block.icse} className="session-topic-link">
+                    {block.topic}
+                  </IcseLink>
+                </p>
                 <p className="mins-line">{minsLabel}</p>
-                {block.icse ? <p className="icse-line">{block.icse}</p> : null}
+                {block.icse ? (
+                  <IcseLink subject={s.subject} icse={block.icse} className="icse-line icse-line--link">
+                    {block.icse}
+                  </IcseLink>
+                ) : null}
               </div>
               <Link
                 className={`btn ${done ? 'btn--ghost' : 'btn--primary'}`}

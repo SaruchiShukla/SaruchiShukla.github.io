@@ -9,6 +9,7 @@ import {
   getTodayDayNumber,
 } from '../data/curriculum'
 import { slugifyDetail } from '../data/topicIndex'
+import { IcseLink } from './IcseLink'
 import { dayCompletion, isSessionDone } from '../hooks/useProgress'
 
 export default function Home({ progress }) {
@@ -42,7 +43,11 @@ export default function Home({ progress }) {
       </section>
 
       <section className="school-map">
-        <h2>Based on public ICSE Class 3 syllabus</h2>
+        <h2>
+          <Link to="/topics" className="heading-link">
+            Based on public ICSE Class 3 syllabus
+          </Link>
+        </h2>
         <p className="muted">{SCHOOL_MAP.note}</p>
         <p className="muted small">
           For {LEARNER.firstName} at {SCHOOL_MAP.name} (ICSE-aligned Primary).
@@ -68,14 +73,18 @@ export default function Home({ progress }) {
         <div className="school-map__cols">
           <div>
             <h3>
-              <Link to="/topics/maths">Maths chapters (ICSE)</Link>
+              <Link to="/topics/maths" className="heading-link heading-link--maths">
+                Maths chapters (ICSE)
+              </Link>
             </h3>
             <ul className="chapter-link-list chapter-link-list--rich">
               {(SCHOOL_MAP.mathsChapters || []).map((u) => (
                 <li key={u.id || u.name}>
-                  <Link to={`/topics/maths/${u.id}`} className="chapter-link-list__title">
-                    <strong>{u.name}</strong>
-                  </Link>
+                  <h4 className="chapter-heading">
+                    <Link to={`/topics/maths/${u.id}`} className="heading-link heading-link--maths">
+                      {u.name} →
+                    </Link>
+                  </h4>
                   {u.details?.length ? (
                     <div className="detail-chips">
                       {u.details.map((detail) => (
@@ -95,14 +104,21 @@ export default function Home({ progress }) {
           </div>
           <div>
             <h3>
-              <Link to="/topics/science">Science chapters (ICSE)</Link>
+              <Link to="/topics/science" className="heading-link heading-link--science">
+                Science chapters (ICSE)
+              </Link>
             </h3>
             <ul className="chapter-link-list chapter-link-list--rich">
               {(SCHOOL_MAP.scienceChapters || []).map((u) => (
                 <li key={u.id || u.name}>
-                  <Link to={`/topics/science/${u.id}`} className="chapter-link-list__title">
-                    <strong>{u.name}</strong>
-                  </Link>
+                  <h4 className="chapter-heading">
+                    <Link
+                      to={`/topics/science/${u.id}`}
+                      className="heading-link heading-link--science"
+                    >
+                      {u.name} →
+                    </Link>
+                  </h4>
                   {u.details?.length ? (
                     <div className="detail-chips">
                       {u.details.map((detail) => (
@@ -133,8 +149,12 @@ export default function Home({ progress }) {
         </div>
         <p className="today-card__title">{today.title}</p>
         <p className="icse-tags">
-          <span>Maths ICSE: {today.mathsUnit}</span>
-          <span>Science ICSE: {today.scienceUnit}</span>
+          <IcseLink subject="maths" unit={today.mathsUnit} className="icse-tags__link">
+            Maths ICSE: {today.mathsUnit}
+          </IcseLink>
+          <IcseLink subject="science" unit={today.scienceUnit} className="icse-tags__link">
+            Science ICSE: {today.scienceUnit}
+          </IcseLink>
         </p>
         <ul className="session-list">
           {APP.sessionPlan.map((s) => {
@@ -146,8 +166,14 @@ export default function Home({ progress }) {
               <li key={s.id} className={`session-list__item session-list__item--${s.subject}`}>
                 <div>
                   <strong>{s.label}</strong>
-                  <span>{topic}</span>
-                  {icse ? <span className="icse-line">{icse}</span> : null}
+                  <IcseLink subject={s.subject} icse={icse} className="session-topic-link">
+                    {topic}
+                  </IcseLink>
+                  {icse ? (
+                    <IcseLink subject={s.subject} icse={icse} className="icse-line icse-line--link">
+                      {icse}
+                    </IcseLink>
+                  ) : null}
                 </div>
                 <div className="session-list__right">
                   <span className="mins">{minsLabel}</span>
@@ -195,8 +221,16 @@ export default function Home({ progress }) {
               <h3>
                 Month {m.month}: {m.name}
               </h3>
-              <p className="muted small">
-                Maths: {m.mathsUnit} · Science: {m.scienceUnit}
+              <p className="muted small month-units">
+                Maths:{' '}
+                <IcseLink subject="maths" unit={m.mathsUnit}>
+                  {m.mathsUnit}
+                </IcseLink>
+                {' · '}
+                Science:{' '}
+                <IcseLink subject="science" unit={m.scienceUnit}>
+                  {m.scienceUnit}
+                </IcseLink>
               </p>
               <div className="day-grid">
                 {monthDays.map((d) => {

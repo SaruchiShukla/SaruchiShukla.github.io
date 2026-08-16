@@ -3,6 +3,7 @@ import { APP, LEARNER, getDay } from '../data/curriculum'
 import { isSessionDone, sessionKey } from '../hooks/useProgress'
 import Quiz from './Quiz'
 import VideoResources from './VideoResources'
+import { IcseLink } from './IcseLink'
 
 export default function Session({ progress, markComplete }) {
   const { dayNum, sessionId } = useParams()
@@ -57,8 +58,16 @@ export default function Session({ progress, markComplete }) {
           {plan.kind === 'lesson' ? '30-min topic course' : '15-question exam'}
         </p>
         <h1>{plan.kind === 'lesson' ? block.lesson.title : `${block.topic} — Exam`}</h1>
-        <p className="muted">{block.topic}</p>
-        {block.icse ? <p className="icse-line">ICSE · {block.icse}</p> : null}
+        <p className="muted">
+          <IcseLink subject={plan.subject} icse={block.icse} className="session-topic-link">
+            {block.topic}
+          </IcseLink>
+        </p>
+        {block.icse ? (
+          <IcseLink subject={plan.subject} icse={block.icse} className="icse-line icse-line--link">
+            ICSE · {block.icse}
+          </IcseLink>
+        ) : null}
         {done && <span className="pill pill--ok">Completed</span>}
       </header>
 

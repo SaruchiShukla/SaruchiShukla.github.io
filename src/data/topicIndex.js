@@ -284,3 +284,35 @@ export function getDetailLink(subjectId, chapterId, focusSlug) {
   if (!chapter || !focusSlug) return null
   return chapter.detailLinks?.find((d) => d.slug === focusSlug) ?? null
 }
+
+/** Resolve an ICSE tag like "Numbers · Abacus" → topic path */
+export function pathForIcseTag(subject, icseTag) {
+  const rules = subject === 'maths' ? MATHS_RULES : SCIENCE_RULES
+  const fallback = subject === 'maths' ? 'patterns' : 'environment'
+  const chapterId = matchChapterId(icseTag, rules, fallback)
+  const chapter = getChapter(subject, chapterId)
+  if (!chapter) return `/topics/${subject}`
+
+  const afterDot = String(icseTag || '')
+    .split('·')
+    .slice(1)
+    .join('·')
+    .trim()
+  if (afterDot) {
+    const hit = chapter.detailLinks?.find((d) =>
+      lessonMatchesDetail({ icse: icseTag, topic: afterDot }, d.label),
+    )
+    if (hit) return hit.path
+  }
+  return `/topics/${subject}/${chapterId}`
+}
+
+/** Map month/unit labels like "Addition & Subtraction" to a topics path */
+export function pathForUnitLabel(subject, unitLabel) {
+  const text = String(unitLabel || '').toLowerCase()
+  const chapters = getChapters(subject)
+  const hit = chapters.find((c) => text.includes(c.name.toLowerCase().split(' ')[0]))
+  if (hit) return `/topics/${subject}/${hit.id}`
+  // compound units → subject topics hub
+  return `/topics/${subject}`
+}

@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { APP, COURSE_MONTHS, DAYS, LEARNER, SCHOOL_MAP, SUBJECTS } from '../data/curriculum'
+import { IcseLink } from './IcseLink'
 
 export default function Subjects() {
   const { subjectId } = useParams()
@@ -54,43 +55,63 @@ export default function Subjects() {
         <p className="eyebrow">
           {LEARNER.name} · {SCHOOL_MAP.name} · ICSE · {APP.totalDays} days
         </p>
-        <h1>{sub.name}</h1>
+        <h1>
+          <Link to={`/topics/${subjectId}`} className={`heading-link heading-link--${subjectId}`}>
+            {sub.name} →
+          </Link>
+        </h1>
         <p className="muted">{sub.blurb}</p>
       </header>
-      {COURSE_MONTHS.map((m) => (
-        <section key={m.month} className="month-block">
-          <h2>
-            Month {m.month}: {m.name}
-          </h2>
-          <p className="muted small">
-            ICSE focus — {subjectId === 'maths' ? m.mathsUnit : m.scienceUnit}
-          </p>
-          <ul className="topic-list">
-            {DAYS.filter((d) => d.month === m.month).map((d) => {
-              const block = subjectId === 'maths' ? d.maths : d.science
-              const lessonId = `${subjectId}-lesson`
-              const quizId = `${subjectId}-quiz`
-              return (
-                <li key={d.day} className={`topic-row topic-row--${subjectId}`}>
-                  <div>
-                    <span className="topic-day">Day {d.day}</span>
-                    <strong>{block.topic}</strong>
-                    {block.icse ? <span className="icse-line">{block.icse}</span> : null}
-                  </div>
-                  <div className="topic-actions">
-                    <Link className="btn btn--small" to={`/day/${d.day}/${lessonId}`}>
-                      Course 30m
-                    </Link>
-                    <Link className="btn btn--small btn--ghost" to={`/day/${d.day}/${quizId}`}>
-                      Exam 15Q
-                    </Link>
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
-        </section>
-      ))}
+      {COURSE_MONTHS.map((m) => {
+        const unit = subjectId === 'maths' ? m.mathsUnit : m.scienceUnit
+        return (
+          <section key={m.month} className="month-block">
+            <h2>
+              Month {m.month}: {m.name}
+            </h2>
+            <p className="muted small">
+              ICSE focus —{' '}
+              <IcseLink subject={subjectId} unit={unit}>
+                {unit}
+              </IcseLink>
+            </p>
+            <ul className="topic-list">
+              {DAYS.filter((d) => d.month === m.month).map((d) => {
+                const block = subjectId === 'maths' ? d.maths : d.science
+                const lessonId = `${subjectId}-lesson`
+                const quizId = `${subjectId}-quiz`
+                return (
+                  <li key={d.day} className={`topic-row topic-row--${subjectId}`}>
+                    <div>
+                      <span className="topic-day">Day {d.day}</span>
+                      <IcseLink subject={subjectId} icse={block.icse} className="session-topic-link">
+                        <strong>{block.topic}</strong>
+                      </IcseLink>
+                      {block.icse ? (
+                        <IcseLink
+                          subject={subjectId}
+                          icse={block.icse}
+                          className="icse-line icse-line--link"
+                        >
+                          {block.icse}
+                        </IcseLink>
+                      ) : null}
+                    </div>
+                    <div className="topic-actions">
+                      <Link className="btn btn--small" to={`/day/${d.day}/${lessonId}`}>
+                        Course 30m
+                      </Link>
+                      <Link className="btn btn--small btn--ghost" to={`/day/${d.day}/${quizId}`}>
+                        Exam 15Q
+                      </Link>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        )
+      })}
     </div>
   )
 }
