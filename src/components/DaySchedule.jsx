@@ -1,11 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
-import { APP, getDay } from '../data/curriculum'
+import { APP, LEARNER, getDay } from '../data/curriculum'
 import { dayCompletion, isSessionDone } from '../hooks/useProgress'
 
 export default function DaySchedule({ progress }) {
   const { dayNum } = useParams()
   const day = getDay(Number(dayNum))
   const completion = dayCompletion(progress, day.day)
+  const last = APP.totalDays
 
   return (
     <div className="page day-page">
@@ -16,12 +17,18 @@ export default function DaySchedule({ progress }) {
       </nav>
 
       <header className="page-head">
-        <p className="eyebrow">Daily schedule · 80 minutes</p>
+        <p className="eyebrow">
+          {LEARNER.firstName} · Month {day.month} · {day.monthName} · no timers
+        </p>
         <h1>
           Day {day.day}: {day.title}
         </h1>
         <p className="muted">
-          Maths course 30 min → Science course 30 min → Maths paper 15 min (15+ Qs) → Science paper 15 min (15+ Qs)
+          Maths 30-min video course → Science 30-min video course → Maths 15Q exam → Science 15Q exam
+        </p>
+        <p className="icse-tags">
+          <span>Maths ICSE: {day.mathsUnit}</span>
+          <span>Science ICSE: {day.scienceUnit}</span>
         </p>
         <div className="progress-bar">
           <span style={{ width: `${completion.pct}%` }} />
@@ -35,13 +42,18 @@ export default function DaySchedule({ progress }) {
         {APP.sessionPlan.map((s, i) => {
           const block = s.subject === 'maths' ? day.maths : day.science
           const done = isSessionDone(progress, day.day, s.id)
+          const minsLabel =
+            s.kind === 'lesson'
+              ? `${s.minutes} minutes · topic video course`
+              : '15 questions · same topic · no timer'
           return (
             <li key={s.id} className={`schedule-step schedule-step--${s.subject}`}>
               <span className="schedule-step__index">{i + 1}</span>
               <div className="schedule-step__body">
                 <h2>{s.label}</h2>
                 <p>{block.topic}</p>
-                <p className="mins-line">{s.minutes} minutes · {s.kind === 'lesson' ? 'Course' : 'Question paper'}</p>
+                <p className="mins-line">{minsLabel}</p>
+                {block.icse ? <p className="icse-line">{block.icse}</p> : null}
               </div>
               <Link
                 className={`btn ${done ? 'btn--ghost' : 'btn--primary'}`}
@@ -60,7 +72,7 @@ export default function DaySchedule({ progress }) {
             ← Day {day.day - 1}
           </Link>
         )}
-        {day.day < 21 && (
+        {day.day < last && (
           <Link className="btn btn--ghost" to={`/day/${day.day + 1}`}>
             Day {day.day + 1} →
           </Link>

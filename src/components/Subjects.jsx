@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { DAYS, SUBJECTS } from '../data/curriculum'
+import { APP, COURSE_MONTHS, DAYS, LEARNER, SCHOOL_MAP, SUBJECTS } from '../data/curriculum'
 
 export default function Subjects() {
   const { subjectId } = useParams()
@@ -13,8 +13,10 @@ export default function Subjects() {
           <span>Subjects</span>
         </nav>
         <header className="page-head">
-          <h1>Subjects</h1>
-          <p className="muted">ICSE Class 3 Maths and Science — linked by everyday schedule.</p>
+          <h1>{LEARNER.firstName}’s subjects</h1>
+          <p className="muted">
+            {SCHOOL_MAP.name} · ICSE Class 3 Maths and Science — mapped unit by unit.
+          </p>
         </header>
         <div className="subject-grid">
           {Object.values(SUBJECTS).map((sub) => (
@@ -49,34 +51,46 @@ export default function Subjects() {
         <span>{sub.name}</span>
       </nav>
       <header className="page-head">
-        <p className="eyebrow">ICSE Class 3 · Bangalore</p>
+        <p className="eyebrow">
+          {LEARNER.name} · {SCHOOL_MAP.name} · ICSE · {APP.totalDays} days
+        </p>
         <h1>{sub.name}</h1>
-        <p className="muted">{sub.blurb}. Each day has a 30-minute course and a 15-question olympiad paper.</p>
+        <p className="muted">{sub.blurb}</p>
       </header>
-      <ul className="topic-list">
-        {DAYS.map((d) => {
-          const block = subjectId === 'maths' ? d.maths : d.science
-          const lessonId = `${subjectId}-lesson`
-          const quizId = `${subjectId}-quiz`
-          return (
-            <li key={d.day} className={`topic-row topic-row--${subjectId}`}>
-              <div>
-                <span className="topic-day">Day {d.day}</span>
-                <strong>{block.topic}</strong>
-                <span className="muted">{d.title}</span>
-              </div>
-              <div className="topic-actions">
-                <Link className="btn btn--small" to={`/day/${d.day}/${lessonId}`}>
-                  Course 30m
-                </Link>
-                <Link className="btn btn--small btn--ghost" to={`/day/${d.day}/${quizId}`}>
-                  Paper 15Q
-                </Link>
-              </div>
-            </li>
-          )
-        })}
-      </ul>
+      {COURSE_MONTHS.map((m) => (
+        <section key={m.month} className="month-block">
+          <h2>
+            Month {m.month}: {m.name}
+          </h2>
+          <p className="muted small">
+            ICSE focus — {subjectId === 'maths' ? m.mathsUnit : m.scienceUnit}
+          </p>
+          <ul className="topic-list">
+            {DAYS.filter((d) => d.month === m.month).map((d) => {
+              const block = subjectId === 'maths' ? d.maths : d.science
+              const lessonId = `${subjectId}-lesson`
+              const quizId = `${subjectId}-quiz`
+              return (
+                <li key={d.day} className={`topic-row topic-row--${subjectId}`}>
+                  <div>
+                    <span className="topic-day">Day {d.day}</span>
+                    <strong>{block.topic}</strong>
+                    {block.icse ? <span className="icse-line">{block.icse}</span> : null}
+                  </div>
+                  <div className="topic-actions">
+                    <Link className="btn btn--small" to={`/day/${d.day}/${lessonId}`}>
+                      Course 30m
+                    </Link>
+                    <Link className="btn btn--small btn--ghost" to={`/day/${d.day}/${quizId}`}>
+                      Exam 15Q
+                    </Link>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      ))}
     </div>
   )
 }

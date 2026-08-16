@@ -9,6 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "bash scripts/deploy.sh",
+    "deploy:netlify-anon": "npm run build && npx --yes netlify-cli deploy --allow-anonymous --dir=./dist --no-build",
+    "deploy:vercel": "npm run build && npx --yes vercel --prod",
     "deploy:preview": "npm run build && npx --yes vercel"
   },
   "dependencies": {

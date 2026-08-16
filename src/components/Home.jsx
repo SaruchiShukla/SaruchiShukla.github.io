@@ -1,51 +1,97 @@
 import { Link } from 'react-router-dom'
-import { APP, DAYS, SUBJECTS, getTodayDayNumber } from '../data/curriculum'
+import {
+  APP,
+  COURSE_MONTHS,
+  DAYS,
+  LEARNER,
+  SCHOOL_MAP,
+  SUBJECTS,
+  getTodayDayNumber,
+} from '../data/curriculum'
 import { dayCompletion, isSessionDone } from '../hooks/useProgress'
 
 export default function Home({ progress }) {
   const todayNum = getTodayDayNumber()
   const today = DAYS.find((d) => d.day === todayNum) ?? DAYS[0]
   const completion = dayCompletion(progress, today.day)
-  const greeting = progress.learnerName ? `Hi ${progress.learnerName}!` : 'Ready to learn?'
+  const name = progress.learnerName || LEARNER.name
+  const first = name.split(' ')[0] || LEARNER.firstName
 
   return (
     <div className="page home">
-      <section className="hero">
-        <p className="hero__eyebrow">{APP.board} · {APP.grade} · Bangalore</p>
-        <h1 className="hero__brand">{APP.name}</h1>
+      <section className="hero hero--saruchi">
+        <p className="hero__eyebrow">
+          {LEARNER.school} · {LEARNER.board} {LEARNER.grade} · {LEARNER.city}
+        </p>
+        <p className="hero__for">Course highlighted for</p>
+        <h1 className="hero__brand hero__learner">{name}</h1>
+        <p className="hero__subbrand">{APP.name}</p>
         <p className="hero__lead">
-          {greeting} Every day: <strong>30 min Maths</strong> + <strong>30 min Science</strong> with
-          videos in the app, then <strong>15 min olympiad papers</strong> (15+ topic questions each).
+          Hi {first}! Every school day: <strong>30-min Maths</strong> + <strong>30-min Science</strong>{' '}
+          topic videos mapped to Vidyashilp’s ICSE Class 3 units, then a{' '}
+          <strong>15-question exam</strong> on the same topics — no timers.
         </p>
         <div className="hero__cta">
           <Link className="btn btn--primary btn--lg" to={`/day/${today.day}`}>
-            Open today’s schedule — Day {today.day}
+            Open {first}’s Day {today.day}
           </Link>
           <Link className="btn btn--ghost btn--lg" to="/reports">
-            My report
+            {first}’s report
           </Link>
+        </div>
+      </section>
+
+      <section className="school-map">
+        <h2>Mapped to {SCHOOL_MAP.name} · ICSE</h2>
+        <p className="muted">{SCHOOL_MAP.note}</p>
+        <div className="school-map__cols">
+          <div>
+            <h3>Maths units</h3>
+            <ul>
+              {SCHOOL_MAP.mathsUnits.map((u) => (
+                <li key={u}>{u}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3>Science units</h3>
+            <ul>
+              {SCHOOL_MAP.scienceUnits.map((u) => (
+                <li key={u}>{u}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
       <section className="today-card">
         <div className="today-card__head">
-          <h2>Today · Day {today.day}</h2>
+          <h2>
+            {first}’s today · Day {today.day}
+            <span className="muted small"> · Month {today.month}</span>
+          </h2>
           <span className="pill">{completion.done}/{completion.total} done</span>
         </div>
         <p className="today-card__title">{today.title}</p>
+        <p className="icse-tags">
+          <span>Maths ICSE: {today.mathsUnit}</span>
+          <span>Science ICSE: {today.scienceUnit}</span>
+        </p>
         <ul className="session-list">
           {APP.sessionPlan.map((s) => {
-            const topic =
-              s.subject === 'maths' ? today.maths.topic : today.science.topic
+            const topic = s.subject === 'maths' ? today.maths.topic : today.science.topic
+            const icse = s.subject === 'maths' ? today.maths.icse : today.science.icse
             const done = isSessionDone(progress, today.day, s.id)
+            const minsLabel = s.kind === 'lesson' ? '30 min' : '15 Q'
             return (
               <li key={s.id} className={`session-list__item session-list__item--${s.subject}`}>
                 <div>
                   <strong>{s.label}</strong>
                   <span>{topic}</span>
+                  {icse ? <span className="icse-line">{icse}</span> : null}
                 </div>
                 <div className="session-list__right">
-                  <span className="mins">{s.minutes} min</span>
+                  <span className="mins">{minsLabel}</span>
                   {done ? <span className="check">Done</span> : null}
                   <Link to={`/day/${today.day}/${s.id}`} className="btn btn--small">
                     {done ? 'Review' : 'Start'}
@@ -74,24 +120,39 @@ export default function Home({ progress }) {
       </section>
 
       <section className="day-picker">
-        <h2>All 21 course days</h2>
-        <p className="muted">Pick any day — each follows the same 80-minute schedule.</p>
-        <div className="day-grid">
-          {DAYS.map((d) => {
-            const c = dayCompletion(progress, d.day)
-            return (
-              <Link
-                key={d.day}
-                to={`/day/${d.day}`}
-                className={`day-chip ${c.done === c.total ? 'day-chip--complete' : ''}`}
-                title={d.title}
-              >
-                <span className="day-chip__num">{d.day}</span>
-                <span className="day-chip__pct">{c.pct}%</span>
-              </Link>
-            )
-          })}
-        </div>
+        <h2>
+          {first}’s 6-month ICSE course · {APP.totalDays} days
+        </h2>
+        <p className="muted">One new Maths topic + one new Science topic every school day — Vidyashilp ICSE map.</p>
+        {(COURSE_MONTHS || APP.months).map((m) => {
+          const monthDays = DAYS.filter((d) => d.month === m.month)
+          return (
+            <div key={m.month} className="month-block">
+              <h3>
+                Month {m.month}: {m.name}
+              </h3>
+              <p className="muted small">
+                Maths: {m.mathsUnit} · Science: {m.scienceUnit}
+              </p>
+              <div className="day-grid">
+                {monthDays.map((d) => {
+                  const c = dayCompletion(progress, d.day)
+                  return (
+                    <Link
+                      key={d.day}
+                      to={`/day/${d.day}`}
+                      className={`day-chip ${c.done === c.total ? 'day-chip--complete' : ''}`}
+                      title={d.title}
+                    >
+                      <span className="day-chip__num">{d.day}</span>
+                      <span className="day-chip__pct">{c.pct}%</span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
       </section>
     </div>
   )

@@ -1,20 +1,24 @@
-const STORAGE_KEY = 'bloomday-progress-v2'
-const LEGACY_KEY = 'bloomday-progress-v1'
+import { LEARNER } from '../data/learner'
+
+const STORAGE_KEY = 'bloomday-progress-v3'
+const LEGACY_KEYS = ['bloomday-progress-v2', 'bloomday-progress-v1']
 
 function emptyProgress() {
   return {
-    learnerName: '',
-    completed: {}, // `${day}-${sessionId}`: { score?, total?, at }
-    attempts: [], // quiz history for reports: { day, sessionId, subject, score, total, pct, at }
+    learnerName: LEARNER.name,
+    completed: {},
+    attempts: [],
     lastDay: 1,
   }
 }
 
 function migrate(raw) {
   const base = { ...emptyProgress(), ...raw }
+  if (!base.learnerName || !String(base.learnerName).trim()) {
+    base.learnerName = LEARNER.name
+  }
   if (!Array.isArray(base.attempts)) base.attempts = []
 
-  // Backfill attempts from completed quiz entries if history empty
   if (base.attempts.length === 0 && base.completed) {
     for (const [key, val] of Object.entries(base.completed)) {
       if (val?.score == null || val?.total == null) continue
@@ -38,7 +42,13 @@ function migrate(raw) {
 
 export function loadProgress() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY)
+    let raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) {
+      for (const key of LEGACY_KEYS) {
+        raw = localStorage.getItem(key)
+        if (raw) break
+      }
+    }
     if (!raw) return emptyProgress()
     return migrate(JSON.parse(raw))
   } catch {

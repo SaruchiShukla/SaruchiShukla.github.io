@@ -63,7 +63,7 @@ function TrendBadge({ delta }) {
 export default function Reports({ progress }) {
   const [range, setRange] = useState('daily')
   const [subject, setSubject] = useState('overall')
-  const name = progress.learnerName || 'Your child'
+  const name = progress.learnerName || 'Saruchi Shukla'
 
   const today = useMemo(() => getTodayReport(progress), [progress])
   const daily = useMemo(() => getDailyTrend(progress, 7), [progress])

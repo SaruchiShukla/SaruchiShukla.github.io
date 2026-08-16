@@ -1,7 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { APP, getDay } from '../data/curriculum'
+import { APP, LEARNER, getDay } from '../data/curriculum'
 import { isSessionDone, sessionKey } from '../hooks/useProgress'
-import SessionTimer from './SessionTimer'
 import Quiz from './Quiz'
 import VideoResources from './VideoResources'
 
@@ -50,19 +49,23 @@ export default function Session({ progress, markComplete }) {
 
       <header className="page-head">
         <p className="eyebrow">
+          {LEARNER.firstName} · Month {day.month}: {day.monthName} ·{' '}
           {plan.subject === 'maths' ? 'Mathematics' : 'Science'} ·{' '}
-          {plan.kind === 'lesson' ? 'Course + videos' : 'In-app paper'}
+          {plan.kind === 'lesson' ? '30-min topic course' : '15-question exam'}
         </p>
-        <h1>{plan.kind === 'lesson' ? block.lesson.title : `${block.topic} — Question Paper`}</h1>
+        <h1>{plan.kind === 'lesson' ? block.lesson.title : `${block.topic} — Exam`}</h1>
         <p className="muted">{block.topic}</p>
+        {block.icse ? <p className="icse-line">ICSE · {block.icse}</p> : null}
         {done && <span className="pill pill--ok">Completed</span>}
       </header>
 
-      <SessionTimer minutes={plan.minutes} label={`${plan.label} timer`} />
-
       {plan.kind === 'lesson' ? (
         <article className="lesson">
-          <VideoResources videos={block.videos} subject={plan.subject} />
+          <VideoResources
+            videos={block.videos}
+            subject={plan.subject}
+            totalMinutes={block.videoMinutes}
+          />
 
           <section className="goals">
             <h2>Today’s goals</h2>
@@ -107,15 +110,14 @@ export default function Session({ progress, markComplete }) {
       ) : (
         <>
           <section className="olympiad-note">
-            <h2>In-app question paper</h2>
+            <h2>Topic exam — 15 questions</h2>
             <p>
-              Tap one answer for each question. When you submit, you get a score right away — and it
-              is saved in your progress report.
+              Same topic as today’s course. No timer — take your time. Tap one answer for each
+              question; your score is saved in the report.
             </p>
           </section>
           <Quiz
             questions={block.quiz}
-            minutes={plan.minutes}
             subject={plan.subject}
             prior={progress.completed[sessionKey(day.day, plan.id)]}
             onSubmit={finishQuiz}

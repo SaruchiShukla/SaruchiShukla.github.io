@@ -1,54 +1,41 @@
 # BloomDay — Class 3 ICSE Study
 
-Everyday Maths & Science path for **ICSE Class 3 (Bangalore)** — built for kids to use **inside the app**.
+Everyday Maths & Science for **Saruchi Shukla** · **Vidyashilp ICSE Class 3 (Bangalore)**.
 
 ## Kid-friendly design
 
 - **Videos play in the app** (no download buttons / no PDF websites)
 - **Question papers are in-app** multiple choice with instant scoring + stars
-- **Report page** shows **daily · weekly · monthly** score trends (Maths, Science, Overall)
+- **Report page** shows **daily · weekly · monthly** score trends
 
-## Daily schedule (90 minutes)
+## Daily schedule
 
-1. **Maths course** — 30 minutes (lesson + in-app video)  
-2. **Science course** — 30 minutes (lesson + in-app video)  
-3. **Maths paper** — 15 minutes · **15 olympiad MCQs** mapped to the day’s topic  
-4. **Science paper** — 15 minutes · **15 olympiad MCQs** mapped to the day’s topic  
-
-Each paper: Logical · Concept · Achievers. Scores feed the daily / weekly / monthly report.
+1. **Maths course** — ~30 minutes (topic video pack)  
+2. **Science course** — ~30 minutes (topic video pack)  
+3. **Maths exam** — 15 topic questions (no timer)  
+4. **Science exam** — 15 topic questions (no timer)  
 
 ## Run locally
 
 ```bash
-cd ~/Projects/class3-icse-study
 npm install
 npm run dev -- --host 127.0.0.1 --port 5180
 ```
 
 Open: **http://127.0.0.1:5180/**
 
-## Host publicly (Vercel)
+## Permanent free hosting (GitHub Pages)
+
+After push to `main`, the site is published at:
+
+**https://amashukl.github.io/bloomday/**
+
+## Temporary public link (no account)
 
 ```bash
-# one-time login
-npx vercel login
-
-# publish
 npm run deploy
 ```
 
-That prints a **Production URL** you can open on phone/tablet.
+Prints a `https://….trycloudflare.com` link (changes each run; Mac must stay on).
 
-### Keep updating automatically
-
-1. **Cursor hook** (already in `.cursor/hooks.json`) — after the agent finishes editing BloomDay, it reminds you to deploy.  
-   For fully automatic deploys, set in your shell profile:
-
-   ```bash
-   export VERCEL_TOKEN="your_token_from_vercel_settings"
-   export BLOOMDAY_AUTO_DEPLOY=1
-   ```
-
-2. **GitHub Pages CI** — push to `main` and enable Pages → Source: GitHub Actions (workflow in `.github/workflows/deploy-pages.yml`).
-
-Progress and the learner’s name stay in the browser (local storage) on each device.
+Progress/scores stay in each device’s browser (local storage).

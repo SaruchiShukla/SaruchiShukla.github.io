@@ -25,6 +25,8 @@ dist-ssr
 
 # Deploy
 .vercel
+.netlify
+bloomday-dist.zip
 .env
 .env.*
 !.env.example

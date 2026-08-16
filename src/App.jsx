@@ -7,6 +7,7 @@ import Session from './components/Session'
 import Subjects from './components/Subjects'
 import Reports from './components/Reports'
 import { loadProgress, saveProgress, sessionKey } from './hooks/useProgress'
+import { LEARNER } from './data/learner'
 import './App.css'
 
 export default function App() {
@@ -15,6 +16,13 @@ export default function App() {
   useEffect(() => {
     saveProgress(progress)
   }, [progress])
+
+  useEffect(() => {
+    setProgress((p) => {
+      if (p.learnerName?.trim()) return p
+      return { ...p, learnerName: LEARNER.name }
+    })
+  }, [])
 
   const onName = useCallback((learnerName) => {
     setProgress((p) => ({ ...p, learnerName }))
@@ -55,7 +63,10 @@ export default function App() {
   }, [])
 
   return (
-    <BrowserRouter>
+    const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
+
+  return (
+    <BrowserRouter basename={routerBasename}>
       <div className="app-shell">
         <Header progress={progress} onName={onName} />
         <main className="app-main">
@@ -73,7 +84,7 @@ export default function App() {
           </Routes>
         </main>
         <footer className="site-footer">
-          <p>BloomDay · In-app videos & scored papers · Daily · Weekly · Monthly reports</p>
+          <p>BloomDay · Saruchi Shukla · Vidyashilp ICSE Class 3 · 30-min courses · 15Q exams</p>
         </footer>
       </div>
     </BrowserRouter>

@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
-import { APP } from '../data/curriculum'
+import { APP, LEARNER } from '../data/curriculum'
 
 export default function Header({ progress, onName }) {
+  const name = progress.learnerName || LEARNER.name
+
   return (
     <header className="site-header">
       <Link to="/" className="brand">
@@ -16,14 +18,18 @@ export default function Header({ progress, onName }) {
           <Link to="/">Home</Link>
           <Link to="/reports">Report</Link>
         </nav>
+        <div className="learner-chip" title={`${LEARNER.school} · ${LEARNER.board} ${LEARNER.grade}`}>
+          <span className="learner-chip__label">For</span>
+          <strong>{name}</strong>
+        </div>
         <label className="name-field">
           <span>Learner</span>
           <input
             type="text"
-            placeholder="Your name"
+            placeholder={LEARNER.name}
             value={progress.learnerName}
             onChange={(e) => onName(e.target.value)}
-            maxLength={24}
+            maxLength={40}
           />
         </label>
       </div>
