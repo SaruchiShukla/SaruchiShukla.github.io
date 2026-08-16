@@ -41,23 +41,53 @@ export default function Home({ progress }) {
       </section>
 
       <section className="school-map">
-        <h2>Mapped to {SCHOOL_MAP.name} · ICSE</h2>
+        <h2>Based on public ICSE Class 3 syllabus</h2>
         <p className="muted">{SCHOOL_MAP.note}</p>
+        <p className="muted small">
+          For {LEARNER.firstName} at {SCHOOL_MAP.name} (ICSE-aligned Primary).
+        </p>
+        {SCHOOL_MAP.sources?.length ? (
+          <p className="muted small school-map__sources">
+            Public references:{' '}
+            {SCHOOL_MAP.sources.map((s, i) => (
+              <span key={s.url}>
+                {i > 0 ? ' · ' : ''}
+                <a href={s.url} target="_blank" rel="noreferrer">
+                  {s.title}
+                </a>
+              </span>
+            ))}
+          </p>
+        ) : null}
         <div className="school-map__cols">
           <div>
-            <h3>Maths units</h3>
+            <h3>Maths chapters (ICSE)</h3>
             <ul>
-              {SCHOOL_MAP.mathsUnits.map((u) => (
-                <li key={u}>{u}</li>
-              ))}
+              {(SCHOOL_MAP.mathsChapters || SCHOOL_MAP.mathsUnits.map((name) => ({ name }))).map(
+                (u) => (
+                  <li key={u.id || u.name}>
+                    <strong>{u.name}</strong>
+                    {u.details?.length ? (
+                      <span className="muted small"> — {u.details.slice(0, 3).join(', ')}…</span>
+                    ) : null}
+                  </li>
+                ),
+              )}
             </ul>
           </div>
           <div>
-            <h3>Science units</h3>
+            <h3>Science chapters (ICSE)</h3>
             <ul>
-              {SCHOOL_MAP.scienceUnits.map((u) => (
-                <li key={u}>{u}</li>
-              ))}
+              {(SCHOOL_MAP.scienceChapters || SCHOOL_MAP.scienceUnits.map((name) => ({ name }))).map(
+                (u) => (
+                  <li key={u.id || u.name}>
+                    <strong>{u.name}</strong>
+                    {u.details?.length ? (
+                      <span className="muted small"> — {u.details.slice(0, 3).join(', ')}…</span>
+                    ) : null}
+                  </li>
+                ),
+              )}
             </ul>
           </div>
         </div>

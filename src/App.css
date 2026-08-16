@@ -226,11 +226,18 @@ h3,
   color: var(--maths);
 }
 
-.school-map ul {
-  margin: 0;
-  padding-left: 1.1rem;
-  color: var(--ink-soft);
-  font-size: 0.92rem;
+.school-map__sources {
+  margin: 0.35rem 0 0.75rem;
+}
+
+.school-map__sources a {
+  color: var(--maths);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.school-map li strong {
+  font-weight: 750;
 }
 
 .icse-tags {
