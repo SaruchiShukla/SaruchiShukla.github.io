@@ -2,18 +2,23 @@
 
 Everyday Maths & Science for **Saruchi Shukla** · **Vidyashilp ICSE Class 3 (Bangalore)**.
 
+## Live site
+
+**https://saruchishukla.github.io/**
+
 ## Kid-friendly design
 
-- **Videos play in the app** (no download buttons / no PDF websites)
-- **Question papers are in-app** multiple choice with instant scoring + stars
-- **Report page** shows **daily · weekly · monthly** score trends
+- Soft pink theme for Saruchi
+- Videos play in the app
+- One-question-at-a-time exams with stars + wrong-answer review
+- Daily · weekly · monthly score reports
 
 ## Daily schedule
 
-1. **Maths course** — ~30 minutes (topic video pack)  
-2. **Science course** — ~30 minutes (topic video pack)  
-3. **Maths exam** — 15 topic questions (no timer)  
-4. **Science exam** — 15 topic questions (no timer)  
+1. Maths course (~30 min video pack)  
+2. Science course (~30 min video pack)  
+3. Maths exam — 15 questions  
+4. Science exam — 15 questions  
 
 ## Run locally
 
@@ -24,18 +29,6 @@ npm run dev -- --host 127.0.0.1 --port 5180
 
 Open: **http://127.0.0.1:5180/**
 
-## Permanent free hosting (GitHub Pages)
+## Deploy
 
-After push to `main`, the site is published at:
-
-**https://amashukl.github.io/bloomday/**
-
-## Temporary public link (no account)
-
-```bash
-npm run deploy
-```
-
-Prints a `https://….trycloudflare.com` link (changes each run; Mac must stay on).
-
-Progress/scores stay in each device’s browser (local storage).
+Push to `main` — GitHub Actions publishes to GitHub Pages automatically.
