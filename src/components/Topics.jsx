@@ -1,10 +1,71 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { LEARNER, SUBJECTS } from '../data/curriculum'
-import { getChapter, getChapters, TOPIC_INDEX } from '../data/topicIndex'
+import {
+  getChapter,
+  getChapters,
+  getDetailLink,
+  TOPIC_INDEX,
+} from '../data/topicIndex'
 import { dayCompletion, isSessionDone } from '../hooks/useProgress'
+
+function LessonRows({ subjectId, lessons, progress }) {
+  return (
+    <ul className="topic-list">
+      {lessons.map((lesson) => {
+        const lessonId = `${subjectId}-lesson`
+        const quizId = `${subjectId}-quiz`
+        const lessonDone = isSessionDone(progress, lesson.day, lessonId)
+        const quizDone = isSessionDone(progress, lesson.day, quizId)
+        const c = dayCompletion(progress, lesson.day)
+        return (
+          <li key={`${lesson.day}-${lesson.topic}`} className={`topic-row topic-row--${subjectId}`}>
+            <div>
+              <span className="topic-day">
+                Day {lesson.day}
+                {c.done === c.total ? ' · done' : ''}
+              </span>
+              <strong>{lesson.topic}</strong>
+              {lesson.icse ? <span className="icse-line">{lesson.icse}</span> : null}
+            </div>
+            <div className="topic-actions">
+              <Link className="btn btn--small" to={lesson.lessonPath}>
+                {lessonDone ? 'Review course' : 'Course 30m'}
+              </Link>
+              <Link className="btn btn--small btn--ghost" to={lesson.quizPath}>
+                {quizDone ? 'Review exam' : 'Exam 15Q'}
+              </Link>
+              <Link className="btn btn--small btn--ghost" to={lesson.dayPath}>
+                Full day
+              </Link>
+            </div>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+function DetailChips({ chapter, activeSlug }) {
+  if (!chapter.detailLinks?.length) return null
+  return (
+    <div className="detail-chips" aria-label={`${chapter.name} topics`}>
+      {chapter.detailLinks.map((d) => (
+        <Link
+          key={d.slug}
+          to={d.path}
+          className={`detail-chip ${activeSlug === d.slug ? 'detail-chip--active' : ''}`}
+        >
+          {d.label}
+        </Link>
+      ))}
+    </div>
+  )
+}
 
 export default function Topics({ progress }) {
   const { subjectId, chapterId } = useParams()
+  const [params] = useSearchParams()
+  const focus = params.get('focus') || ''
 
   if (!subjectId) {
     return (
@@ -17,7 +78,7 @@ export default function Topics({ progress }) {
         <header className="page-head">
           <h1>{LEARNER.firstName}’s ICSE topics</h1>
           <p className="muted">
-            Jump by syllabus chapter — open the 30‑min course or 15Q exam for any topic, without
+            Jump by syllabus chapter and sub-topic — open the 30‑min course or 15Q exam without
             following the day schedule.
           </p>
         </header>
@@ -30,13 +91,14 @@ export default function Topics({ progress }) {
                 <h2>
                   <Link to={`/topics/${sid}`}>{sub.name}</Link>
                 </h2>
-                <ul className="chapter-link-list">
+                <ul className="chapter-link-list chapter-link-list--rich">
                   {chapters.map((ch) => (
                     <li key={ch.id}>
-                      <Link to={`/topics/${sid}/${ch.id}`}>
+                      <Link to={`/topics/${sid}/${ch.id}`} className="chapter-link-list__title">
                         <strong>{ch.name}</strong>
                         <span className="muted small">{ch.lessonCount} lessons</span>
                       </Link>
+                      <DetailChips chapter={ch} />
                     </li>
                   ))}
                 </ul>
@@ -61,7 +123,7 @@ export default function Topics({ progress }) {
   if (!chapterId) {
     const chapters = getChapters(subjectId)
     return (
-      <div className="page topics-page">
+      <div className={`page topics-page topics-page--${subjectId}`}>
         <nav className="crumb">
           <Link to="/">Home</Link>
           <span>/</span>
@@ -71,18 +133,18 @@ export default function Topics({ progress }) {
         </nav>
         <header className="page-head">
           <h1>{sub.name} · by chapter</h1>
-          <p className="muted">Pick a chapter to see every linked course day.</p>
+          <p className="muted">Pick a chapter or a highlighted sub-topic.</p>
         </header>
         <ul className="chapter-cards">
           {chapters.map((ch) => (
             <li key={ch.id}>
-              <Link to={`/topics/${subjectId}/${ch.id}`} className={`chapter-card chapter-card--${subjectId}`}>
-                <h3>{ch.name}</h3>
-                {ch.details?.length ? (
-                  <p className="muted small">{ch.details.slice(0, 4).join(' · ')}</p>
-                ) : null}
-                <span>{ch.lessonCount} lessons →</span>
-              </Link>
+              <div className={`chapter-card chapter-card--${subjectId}`}>
+                <Link to={`/topics/${subjectId}/${ch.id}`} className="chapter-card__main">
+                  <h3>{ch.name}</h3>
+                  <span>{ch.lessonCount} lessons →</span>
+                </Link>
+                <DetailChips chapter={ch} />
+              </div>
             </li>
           ))}
         </ul>
@@ -100,8 +162,11 @@ export default function Topics({ progress }) {
     )
   }
 
+  const focused = getDetailLink(subjectId, chapterId, focus)
+  const showFocused = Boolean(focused && focus)
+
   return (
-    <div className="page topics-page">
+    <div className={`page topics-page topics-page--${subjectId}`}>
       <nav className="crumb">
         <Link to="/">Home</Link>
         <span>/</span>
@@ -109,53 +174,45 @@ export default function Topics({ progress }) {
         <span>/</span>
         <Link to={`/topics/${subjectId}`}>{sub.name}</Link>
         <span>/</span>
-        <span>{chapter.name}</span>
+        <Link to={`/topics/${subjectId}/${chapterId}`}>{chapter.name}</Link>
+        {showFocused ? (
+          <>
+            <span>/</span>
+            <span>{focused.label}</span>
+          </>
+        ) : null}
       </nav>
       <header className="page-head">
         <p className="eyebrow">ICSE Class 3 · {sub.name}</p>
-        <h1>{chapter.name}</h1>
-        {chapter.details?.length ? (
-          <p className="muted">Covers: {chapter.details.join(' · ')}</p>
-        ) : null}
-        <p className="muted small">{chapter.lessonCount} linked lessons in BloomDay</p>
+        <h1>{showFocused ? focused.label : chapter.name}</h1>
+        <p className="muted">
+          {showFocused
+            ? `Part of ${chapter.name} · ${focused.lessonCount || chapter.lessonCount} linked lessons`
+            : `Chapter topics below — tap a chip to filter.`}
+        </p>
+        <DetailChips chapter={chapter} activeSlug={focus} />
+        {showFocused ? (
+          <p className="muted small">
+            <Link to={`/topics/${subjectId}/${chapterId}`}>Show whole chapter</Link>
+          </p>
+        ) : (
+          <p className="muted small">{chapter.lessonCount} linked lessons in BloomDay</p>
+        )}
       </header>
 
-      {chapter.subtopics.map((group) => (
-        <section key={group.label} className="topic-group">
-          <h2>{group.label}</h2>
-          <ul className="topic-list">
-            {group.lessons.map((lesson) => {
-              const lessonId = `${subjectId}-lesson`
-              const quizId = `${subjectId}-quiz`
-              const lessonDone = isSessionDone(progress, lesson.day, lessonId)
-              const quizDone = isSessionDone(progress, lesson.day, quizId)
-              const c = dayCompletion(progress, lesson.day)
-              return (
-                <li key={`${lesson.day}-${lesson.topic}`} className={`topic-row topic-row--${subjectId}`}>
-                  <div>
-                    <span className="topic-day">
-                      Day {lesson.day}
-                      {c.done === c.total ? ' · done' : ''}
-                    </span>
-                    <strong>{lesson.topic}</strong>
-                  </div>
-                  <div className="topic-actions">
-                    <Link className="btn btn--small" to={lesson.lessonPath}>
-                      {lessonDone ? 'Review course' : 'Course 30m'}
-                    </Link>
-                    <Link className="btn btn--small btn--ghost" to={lesson.quizPath}>
-                      {quizDone ? 'Review exam' : 'Exam 15Q'}
-                    </Link>
-                    <Link className="btn btn--small btn--ghost" to={lesson.dayPath}>
-                      Full day
-                    </Link>
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
+      {showFocused ? (
+        <section className="topic-group">
+          <h2>{focused.label}</h2>
+          <LessonRows subjectId={subjectId} lessons={focused.lessons} progress={progress} />
         </section>
-      ))}
+      ) : (
+        chapter.subtopics.map((group) => (
+          <section key={group.label} className="topic-group">
+            <h2>{group.label}</h2>
+            <LessonRows subjectId={subjectId} lessons={group.lessons} progress={progress} />
+          </section>
+        ))
+      )}
     </div>
   )
 }

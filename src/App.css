@@ -260,6 +260,96 @@ h3,
   font-size: 0.92rem;
 }
 
+.chapter-link-list--rich {
+  list-style: none;
+  padding-left: 0;
+}
+
+.chapter-link-list--rich > li {
+  margin: 0 0 0.95rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.chapter-link-list--rich > li:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.chapter-link-list__title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--ink);
+  text-decoration: none;
+  margin-bottom: 0.35rem;
+}
+
+.chapter-link-list__title:hover {
+  color: var(--maths);
+  text-decoration: underline;
+}
+
+.topics-overview__col--science .chapter-link-list__title:hover,
+.school-map__cols > div:last-child .chapter-link-list__title:hover {
+  color: var(--science);
+}
+
+.detail-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+
+.detail-chip {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.25;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: var(--maths-soft);
+  color: var(--maths);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.detail-chip:hover {
+  border-color: var(--maths);
+}
+
+.detail-chip--active {
+  background: var(--maths);
+  color: #fff;
+}
+
+.school-map__cols > div:last-child .detail-chip,
+.topics-overview__col--science .detail-chip,
+.chapter-card--science .detail-chip {
+  background: var(--science-soft);
+  color: var(--science);
+}
+
+.school-map__cols > div:last-child .detail-chip:hover,
+.topics-overview__col--science .detail-chip:hover,
+.chapter-card--science .detail-chip:hover {
+  border-color: var(--science);
+}
+
+.topics-overview__col--science .detail-chip--active,
+.chapter-card--science .detail-chip--active,
+.topics-page--science .detail-chip--active {
+  background: var(--science);
+  color: #fff;
+}
+
+.topics-page--maths .detail-chip--active {
+  background: var(--maths);
+  color: #fff;
+}
+
 .chapter-link-list a {
   color: var(--ink);
   text-decoration: none;
@@ -269,11 +359,6 @@ h3,
 .chapter-link-list a:hover {
   color: var(--maths);
   text-decoration: underline;
-}
-
-.school-map__cols .chapter-link-list:last-child a:hover,
-.topics-overview__col--science .chapter-link-list a:hover {
-  color: var(--science);
 }
 
 .topics-overview {
@@ -352,6 +437,17 @@ h3,
   transform: translateY(-2px);
 }
 
+.chapter-card__main {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 0.35rem;
+}
+
+.chapter-card__main:hover h3 {
+  text-decoration: underline;
+}
+
 .chapter-card h3 {
   margin: 0 0 0.35rem;
   font-size: 1.05rem;
@@ -361,12 +457,12 @@ h3,
   margin: 0 0 0.7rem;
 }
 
-.chapter-card span {
+.chapter-card__main span {
   font-weight: 800;
   color: var(--maths);
 }
 
-.chapter-card--science span {
+.chapter-card--science .chapter-card__main span {
   color: var(--science);
 }
 

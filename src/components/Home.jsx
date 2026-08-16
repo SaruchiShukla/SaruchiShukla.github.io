@@ -8,6 +8,7 @@ import {
   SUBJECTS,
   getTodayDayNumber,
 } from '../data/curriculum'
+import { slugifyDetail } from '../data/topicIndex'
 import { dayCompletion, isSessionDone } from '../hooks/useProgress'
 
 export default function Home({ progress }) {
@@ -69,46 +70,54 @@ export default function Home({ progress }) {
             <h3>
               <Link to="/topics/maths">Maths chapters (ICSE)</Link>
             </h3>
-            <ul className="chapter-link-list">
-              {(SCHOOL_MAP.mathsChapters || SCHOOL_MAP.mathsUnits.map((name) => ({ name }))).map(
-                (u) => (
-                  <li key={u.id || u.name}>
-                    {u.id ? (
-                      <Link to={`/topics/maths/${u.id}`}>
-                        <strong>{u.name}</strong>
-                      </Link>
-                    ) : (
-                      <strong>{u.name}</strong>
-                    )}
-                    {u.details?.length ? (
-                      <span className="muted small"> — {u.details.slice(0, 3).join(', ')}…</span>
-                    ) : null}
-                  </li>
-                ),
-              )}
+            <ul className="chapter-link-list chapter-link-list--rich">
+              {(SCHOOL_MAP.mathsChapters || []).map((u) => (
+                <li key={u.id || u.name}>
+                  <Link to={`/topics/maths/${u.id}`} className="chapter-link-list__title">
+                    <strong>{u.name}</strong>
+                  </Link>
+                  {u.details?.length ? (
+                    <div className="detail-chips">
+                      {u.details.map((detail) => (
+                        <Link
+                          key={detail}
+                          to={`/topics/maths/${u.id}?focus=${encodeURIComponent(slugifyDetail(detail))}`}
+                          className="detail-chip"
+                        >
+                          {detail}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
+                </li>
+              ))}
             </ul>
           </div>
           <div>
             <h3>
               <Link to="/topics/science">Science chapters (ICSE)</Link>
             </h3>
-            <ul className="chapter-link-list">
-              {(SCHOOL_MAP.scienceChapters || SCHOOL_MAP.scienceUnits.map((name) => ({ name }))).map(
-                (u) => (
-                  <li key={u.id || u.name}>
-                    {u.id ? (
-                      <Link to={`/topics/science/${u.id}`}>
-                        <strong>{u.name}</strong>
-                      </Link>
-                    ) : (
-                      <strong>{u.name}</strong>
-                    )}
-                    {u.details?.length ? (
-                      <span className="muted small"> — {u.details.slice(0, 3).join(', ')}…</span>
-                    ) : null}
-                  </li>
-                ),
-              )}
+            <ul className="chapter-link-list chapter-link-list--rich">
+              {(SCHOOL_MAP.scienceChapters || []).map((u) => (
+                <li key={u.id || u.name}>
+                  <Link to={`/topics/science/${u.id}`} className="chapter-link-list__title">
+                    <strong>{u.name}</strong>
+                  </Link>
+                  {u.details?.length ? (
+                    <div className="detail-chips">
+                      {u.details.map((detail) => (
+                        <Link
+                          key={detail}
+                          to={`/topics/science/${u.id}?focus=${encodeURIComponent(slugifyDetail(detail))}`}
+                          className="detail-chip"
+                        >
+                          {detail}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
